@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Сафин ММ Задание 1</title>
+    <script src=C:\Users\Мурат\Downloads\index.js></script>
+</head>
+<style>
+    .table {
+        user-select: none;
+    }
+
+    .table th {
+        padding: 5px 10px;
+        background: rgb(184, 189, 194);
+        cursor: pointer;
+    }
+
+    .table > * {
+        background: rgb(240, 248, 255);
+        text-align: center;
+        padding: 5px;
+        border: 1px solid #000;
+    }
+</style>
+<body>
+<script>
+    class FitnessBracelet {
+        constructor(size, type, speed_ch, speed_za) {
+            this.size = size;
+            this.type = type;
+            this.speed_ch = speed_ch;
+            this.speed_za = speed_za;
+        }
+    }
+    const fitnessBraceletArray = [
+        new FitnessBracelet(12, "A", 4, 1),
+        new FitnessBracelet(4, "D", 6, 2),
+        new FitnessBracelet(6, "H", 10, 8),
+        new FitnessBracelet(12, "E", 5, 1),
+        new FitnessBracelet(9, "B", 15, 6),
+        new FitnessBracelet(11, "G", 5, 3),
+        new FitnessBracelet(13, "M", 13, 2),
+        new FitnessBracelet(5, "L", 11, 3),
+        new FitnessBracelet(15, "F", 9, 5),
+        new FitnessBracelet(5, "C", 12, 10),
+        new FitnessBracelet(10, "K", 6, 13),
+        new FitnessBracelet(6, "I", 4, 4),
+        new FitnessBracelet(4, "J", 12, 5),
+    ];
+    // Загрузка данных в localStorage
+    localStorage.setItem("array", JSON.stringify(fitnessBraceletArray));
+
+    $(function () {
+        $("body").append(`
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="number">Объем</th>
+                        <th class="string">Тип Памяти</th>
+                        <th class="number">Скорость чтения</th>
+                        <th class="number">Скорость записи</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        `);
+        console.log(JSON.parse(localStorage.getItem("array")));
+        JSON.parse(localStorage.getItem("array")).forEach(element => {
+            $("table tbody").append(`
+                <tr>
+                    <td>${element.size}</td>
+                    <td>${element.type}</td>
+                    <td>${element.speed_ch}</td>
+                    <td>${element.speed_za}</td>
+                </tr>
+            `)
+        });
+        $("th").each(function (column) {
+            $(this).click(function () {
+                let type = $(this).attr("class");
+                let records = $("table").find("tbody > tr");
+
+                this.asc = !this.asc;
+
+                records.sort((a, b) => {
+                    let str1 = $(a).children("td").eq(column).text();
+                    let str2 = $(b).children("td").eq(column).text();
+                    return type === "number" ? str1 - str2 : str1.localeCompare(str2);
+                })
+
+                if (!this.asc) {
+                    records = records.toArray().reverse();
+                }
+
+                $.each(records, function (index, row) {
+                    $("tbody").append(row);
+                })
+            })
+        })
+    })
+</script>
+</body>
+</html>
