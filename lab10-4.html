@@ -48,6 +48,9 @@
         flex: 1 1 auto;
         font-size: 20px;
     }
+    .task {
+        background: rgb(0, 250, 63);
+    }
 </style>
 <body>
 <input type="date" class="date">
@@ -87,6 +90,7 @@
     let year = null;
     let month = null;
     let selectedDay = null;
+    let selectedTd = null;
 
     dateInput.on("change", function () {
         // Очистка календаря
@@ -106,12 +110,18 @@
         }
         // Добавление дней в календарь
         for (let i = 1; i <= lastDateOfMonth; i++) {
+            const td = $(`<td>${i}</td>`);
+
+            // Если имеется событие в localStorage тогда изменим цвет
+            if (localStorage.getItem([i, month, year].join("/"))) {
+                td.addClass("task");
+            }
+
             if (flag) {
                 $("tbody").append("<tr></tr>");
             }
 
             flag = false;
-            const td = $(`<td>${i}</td>`);
             tr.append(td);
 
             if ((firstDay + i - 1) % 7 === 0) {
@@ -122,9 +132,11 @@
 
         $("td").click(function () {
             selectedDay = $(this).text();
+            selectedTd = $(this);
             $(".modal").show(500);
             $("textarea").val(localStorage.getItem([selectedDay, month, year].join("/")));
         })
+
     })
     $(".close").click(function () {
         $("textarea").val("");
@@ -132,6 +144,7 @@
     })
 
     $(".save").click(function () {
+        selectedTd.addClass("task");
         localStorage.setItem([selectedDay, month, year].join("/"), $("textarea").val());
     })
 </script>
